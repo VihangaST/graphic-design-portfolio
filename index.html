@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Creative Designer - Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap");
+
+      * {
+        font-family: "Inter", sans-serif;
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: "Playfair Display", serif;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      .hero-bg {
+        background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+      }
+
+      .section-title {
+        font-family: "Playfair Display", serif;
+        font-size: 2.5rem;
+        font-weight: 600;
+        letter-spacing: -1px;
+      }
+
+      .filter-btn {
+        padding: 10px 20px;
+        border: 1.5px solid #e5e5e5;
+        border-radius: 8px;
+        background: white;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: #666;
+      }
+
+      .filter-btn:hover {
+        border-color: #d4a574;
+        color: #d4a574;
+      }
+
+      .filter-btn.active {
+        background: #1a1a1a;
+        color: white;
+        border-color: #1a1a1a;
+      }
+
+      .portfolio-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        opacity: 1;
+        animation: fadeInCard 0.5s ease-out forwards;
+      }
+
+      .portfolio-card.hidden {
+        display: none;
+      }
+
+      @keyframes fadeInCard {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .portfolio-card:hover {
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+        transform: translateY(-8px);
+      }
+
+      .portfolio-image {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+        background: #f5f5f5;
+        transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .portfolio-card:hover .portfolio-image {
+        transform: scale(1.05);
+      }
+
+      .portfolio-content {
+        padding: 20px;
+        background: white;
+      }
+
+      .portfolio-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 8px;
+        line-height: 1.4;
+      }
+
+      .portfolio-category {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 600;
+        color: #d4a574;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 50;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .modal.active {
+        display: flex;
+        opacity: 1;
+      }
+
+      .modal-content {
+        position: relative;
+        max-width: 800px;
+        width: 100%;
+        background: #1a1a1a;
+        border-radius: 12px;
+        padding: 30px;
+        animation: modalSlideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      @keyframes modalSlideUp {
+        from {
+          transform: translateY(40px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .modal-image {
+        width: 100%;
+        border-radius: 8px;
+        margin-bottom: 24px;
+        object-fit: cover;
+      }
+
+      .modal-close {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        cursor: pointer;
+        color: white;
+        font-size: 24px;
+        transition: all 0.3s ease;
+      }
+
+      .modal-close:hover {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.4);
+      }
+
+      .modal-title {
+        font-family: "Playfair Display", serif;
+        font-size: 28px;
+        font-weight: 600;
+        color: white;
+        margin-bottom: 12px;
+      }
+
+      .modal-category {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 600;
+        color: #d4a574;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 16px;
+      }
+
+      .modal-description {
+        color: #ccc;
+        font-size: 15px;
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+
+      .modal-tools {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 20px;
+        color: #999;
+        font-size: 14px;
+      }
+
+      .modal-tools strong {
+        color: #d4a574;
+        font-weight: 600;
+      }
+
+      .accent-color {
+        color: #d4a574;
+      }
+
+      .social-icon {
+        display: inline-flex;
+        width: 44px;
+        height: 44px;
+        align-items: center;
+        justify-content: center;
+        border: 1.5px solid #e5e5e5;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: #333;
+      }
+
+      .social-icon:hover {
+        border-color: #d4a574;
+        background-color: #d4a574;
+        color: white;
+      }
+
+      nav a {
+        position: relative;
+        font-weight: 500;
+        color: #333;
+        transition: color 0.3s ease;
+      }
+
+      nav a::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: #d4a574;
+        transition: width 0.3s ease;
+      }
+
+      nav a:hover::after {
+        width: 100%;
+      }
+
+      .cta-button {
+        background: #1a1a1a;
+        color: white;
+        padding: 14px 32px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 15px;
+        transition: all 0.3s ease;
+        display: inline-block;
+        text-decoration: none;
+        border: 1.5px solid #1a1a1a;
+      }
+
+      .cta-button:hover {
+        background: transparent;
+        color: #1a1a1a;
+      }
+
+      @media (max-width: 768px) {
+        .section-title {
+          font-size: 2rem;
+        }
+
+        .modal-content {
+          padding: 20px;
+        }
+
+        .modal-title {
+          font-size: 22px;
+        }
+
+        .filter-btn {
+          padding: 8px 16px;
+          font-size: 13px;
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-white">
+    <!-- Navigation -->
+    <nav
+      class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md z-40 border-b border-gray-100"
+    >
+      <div
+        class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between"
+      >
+        <div class="text-lg font-bold tracking-wider">AD</div>
+        <div class="hidden md:flex gap-8">
+          <a href="#home">Home</a>
+          <a href="#work">Work</a>
+          <a href="#about">About</a>
+          <a href="#contact">Contact</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section
+      id="home"
+      class="hero-bg min-h-screen flex items-center justify-center pt-20 px-6"
+    >
+      <div class="max-w-3xl mx-auto text-center">
+        <h1
+          class="text-6xl md:text-7xl font-bold mb-6 tracking-tight text-gray-900"
+        >
+          Creative Design
+          <span class="block accent-color mt-2">Reimagined</span>
+        </h1>
+        <p
+          class="text-lg md:text-xl text-gray-600 mb-12 font-light leading-relaxed max-w-2xl mx-auto"
+        >
+          Thoughtfully crafted visual experiences across social media,
+          packaging, cards, and covers. Each design tells a story.
+        </p>
+        <a href="#work" class="cta-button">View My Work</a>
+      </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="work" class="py-32 px-6">
+      <div class="max-w-7xl mx-auto">
+        <div class="mb-16">
+          <h2 class="section-title mb-4 text-gray-900">Selected Works</h2>
+          <p class="text-gray-600 font-light text-lg">
+            A collection of recent design projects
+          </p>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="mb-12 flex flex-wrap gap-3">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="social-media">
+            Social Media Designs
+          </button>
+          <button class="filter-btn" data-filter="greeting-cards">
+            Greeting Cards
+          </button>
+          <button class="filter-btn" data-filter="packaging">
+            Label & Packaging Design
+          </button>
+          <button class="filter-btn" data-filter="cover">
+            Cover Page Design
+          </button>
+        </div>
+
+        <!-- Portfolio Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- Social Media 1 -->
+          <div class="portfolio-card" data-category="social-media">
+            <img
+              src="https://images.unsplash.com/photo-1611162617308-7d7a5007b720?w=500&h=400&fit=crop"
+              alt="Instagram Campaign"
+              class="portfolio-image"
+            />
+            <div class="portfolio-content">
+              <div class="portfolio-title">Summer Fashion Campaign</div>
+              <span class="portfolio-category">Social Media</span>
+            </div>
+          </div>
+
+          <!-- Greeting Cards: Display all JPGs from greeting_cards folder -->
+          <!-- AUTO-GENERATED GREETING CARDS START -->
+          <div class="portfolio-card" data-category="greeting-cards">
+            <img src="greeting_cards/mockup-B1.jpg" alt="Greeting Card mockup-B1" class="portfolio-image" />
+            <div class="portfolio-content">
+              <div class="portfolio-title">Greeting Card: mockup-B1</div>
+              <span class="portfolio-category">Greeting Cards</span>
+            </div>
+          </div>
+          <div class="portfolio-card" data-category="greeting-cards">
+            <img src="greeting_cards/mockup-B2.jpg" alt="Greeting Card mockup-B2" class="portfolio-image" />
+            <div class="portfolio-content">
+              <div class="portfolio-title">Greeting Card: mockup-B2</div>
+              <span class="portfolio-category">Greeting Cards</span>
+            </div>
+          </div>
+          <div class="portfolio-card" data-category="greeting-cards">
+            <img src="greeting_cards/mockup-B3.jpg" alt="Greeting Card mockup-B3" class="portfolio-image" />
+            <div class="portfolio-content">
+              <div class="portfolio-title">Greeting Card: mockup-B3</div>
+              <span class="portfolio-category">Greeting Cards</span>
+            </div>
+          </div>
+          <div class="portfolio-card" data-category="greeting-cards">
+            <img src="greeting_cards/mockup-B4.jpg" alt="Greeting Card mockup-B4" class="portfolio-image" />
+            <div class="portfolio-content">
+              <div class="portfolio-title">Greeting Card: mockup-B4</div>
+              <span class="portfolio-category">Greeting Cards</span>
+            </div>
+          </div>
+          <div class="portfolio-card" data-category="greeting-cards">
+            <img src="greeting_cards/mockup-B5.jpg" alt="Greeting Card mockup-B5" class="portfolio-image" />
+            <div class="portfolio-content">
+              <div class="portfolio-title">Greeting Card: mockup-B5</div>
+              <span class="portfolio-category">Greeting Cards</span>
+            </div>
+          </div>
+          <div class="portfolio-card" data-category="greeting-cards">
+            <img src="greeting_cards/mockup-BD1.jpg" alt="Greeting Card mockup-BD1" class="portfolio-image" />
+            <div class="portfolio-content">
+              <div class="portfolio-title">Greeting Card: mockup-BD1</div>
+              <span class="portfolio-category">Greeting Cards</span>
+            </div>
+          </div>
+          <div class="portfolio-card" data-category="greeting-cards">
+            <img src="greeting_cards/mockup-BF1.jpg" alt="Greeting Card mockup-BF1" class="portfolio-image" />
+            <div class="portfolio-content">
+              <div class="portfolio-title">Greeting Card: mockup-BF1</div>
+              <span class="portfolio-category">Greeting Cards</span>
+            </div>
+          </div>
+          <div class="portfolio-card" data-category="greeting-cards">
+            <img src="greeting_cards/mockup-BF22.jpg" alt="Greeting Card mockup-BF22" class="portfolio-image" />
+            <div class="portfolio-content">
+              <div class="portfolio-title">Greeting Card: mockup-BF22</div>
+              <span class="portfolio-category">Greeting Cards</span>
+            </div>
+          </div>
+          <div class="portfolio-card" data-category="greeting-cards">
+            <img src="greeting_cards/mockup-BL.jpg" alt="Greeting Card mockup-BL" class="portfolio-image" />
+            <div class="portfolio-content">
+              <div class="portfolio-title">Greeting Card: mockup-BL</div>
+              <span class="portfolio-category">Greeting Cards</span>
+            </div>
+          </div>
+          <div class="portfolio-card" data-category="greeting-cards">
+            <img src="greeting_cards/mockup-BM1.jpg" alt="Greeting Card mockup-BM1" class="portfolio-image" />
+            <div class="portfolio-content">
+              <div class="portfolio-title">Greeting Card: mockup-BM1</div>
+              <span class="portfolio-category">Greeting Cards</span>
+            </div>
+          </div>
+          <div class="portfolio-card" data-category="greeting-cards">
+            <img src="greeting_cards/mockup-BM2.jpg" alt="Greeting Card mockup-BM2" class="portfolio-image" />
+            <div class="portfolio-content">
+              <div class="portfolio-title">Greeting Card: mockup-BM2</div>
+              <span class="portfolio-category">Greeting Cards</span>
+            </div>
+          </div>
+          <div class="portfolio-card" data-category="greeting-cards">
+            <img src="greeting_cards/mockup-BS1.jpg" alt="Greeting Card mockup-BS1" class="portfolio-image" />
+            <div class="portfolio-content">
+              <div class="portfolio-title">Greeting Card: mockup-BS1</div>
+              <span class="portfolio-category">Greeting Cards</span>
+            </div>
+          </div>
+          <div class="portfolio-card" data-category="greeting-cards">
+            <img src="greeting_cards/mockup-BSI1.jpg" alt="Greeting Card mockup-BSI1" class="portfolio-image" />
+            <div class="portfolio-content">
+              <div class="portfolio-title">Greeting Card: mockup-BSI1</div>
+              <span class="portfolio-category">Greeting Cards</span>
+            </div>
+          </div>
+          <div class="portfolio-card" data-category="greeting-cards">
+            <img src="greeting_cards/mockup-T2.jpg" alt="Greeting Card mockup-T2" class="portfolio-image" />
+            <div class="portfolio-content">
+              <div class="portfolio-title">Greeting Card: mockup-T2</div>
+              <span class="portfolio-category">Greeting Cards</span>
+            </div>
+          </div>
+          <div class="portfolio-card" data-category="greeting-cards">
+            <img src="greeting_cards/mockup-T3.jpg" alt="Greeting Card mockup-T3" class="portfolio-image" />
+            <div class="portfolio-content">
+              <div class="portfolio-title">Greeting Card: mockup-T3</div>
+              <span class="portfolio-category">Greeting Cards</span>
+            </div>
+          </div>
+          <div class="portfolio-card" data-category="greeting-cards">
+            <img src="greeting_cards/mockupbday bro.jpg" alt="Greeting Card mockupbday bro" class="portfolio-image" />
+            <div class="portfolio-content">
+              <div class="portfolio-title">Greeting Card: mockupbday bro</div>
+              <span class="portfolio-category">Greeting Cards</span>
+            </div>
+          </div>
+          <div class="portfolio-card" data-category="greeting-cards">
+            <img src="greeting_cards/mockupbday mother.jpg" alt="Greeting Card mockupbday mother" class="portfolio-image" />
+            <div class="portfolio-content">
+              <div class="portfolio-title">Greeting Card: mockupbday mother</div>
+              <span class="portfolio-category">Greeting Cards</span>
+            </div>
+          </div>
+          <div class="portfolio-card" data-category="greeting-cards">
+            <img src="greeting_cards/mockupbdayfriend.jpg" alt="Greeting Card mockupbdayfriend" class="portfolio-image" />
+            <div class="portfolio-content">
+              <div class="portfolio-title">Greeting Card: mockupbdayfriend</div>
+              <span class="portfolio-category">Greeting Cards</span>
+            </div>
+          </div>
+          <div class="portfolio-card" data-category="greeting-cards">
+            <img src="greeting_cards/mockupdad bday.jpg" alt="Greeting Card mockupdad bday" class="portfolio-image" />
+            <div class="portfolio-content">
+              <div class="portfolio-title">Greeting Card: mockupdad bday</div>
+              <span class="portfolio-category">Greeting Cards</span>
+            </div>
+          </div>
+          <div class="portfolio-card" data-category="greeting-cards">
+            <img src="greeting_cards/mockupfathersday.jpg" alt="Greeting Card mockupfathersday" class="portfolio-image" />
+            <div class="portfolio-content">
+              <div class="portfolio-title">Greeting Card: mockupfathersday</div>
+              <span class="portfolio-category">Greeting Cards</span>
+            </div>
+          </div>
+          <div class="portfolio-card" data-category="greeting-cards">
+            <img src="greeting_cards/retirement.jpg" alt="Greeting Card retirement" class="portfolio-image" />
+            <div class="portfolio-content">
+              <div class="portfolio-title">Greeting Card: retirement</div>
+              <span class="portfolio-category">Greeting Cards</span>
+            </div>
+          </div>
+          <!-- AUTO-GENERATED GREETING CARDS END -->
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-32 px-6 bg-gray-50">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="section-title mb-12 text-gray-900">About</h2>
+
+        <div class="grid md:grid-cols-2 gap-12">
+          <div>
+            <p class="text-lg text-gray-700 font-light leading-relaxed mb-6">
+              I'm a creative designer passionate about translating ideas into
+              compelling visual narratives. With expertise across multiple
+              disciplines, I craft designs that resonate with audiences and
+              solve real problems.
+            </p>
+            <p class="text-lg text-gray-700 font-light leading-relaxed">
+              My process is rooted in research, strategic thinking, and
+              meticulous attention to detail. Every project is an opportunity to
+              create something meaningful and memorable.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-bold text-gray-900 mb-6 tracking-widest">
+              TOOLS & EXPERTISE
+            </h3>
+            <div class="space-y-4">
+              <p class="text-gray-700 font-light">
+                <strong class="font-semibold text-gray-900"
+                  >Design Software:</strong
+                >
+                Figma, Adobe Photoshop, Illustrator, InDesign
+              </p>
+              <p class="text-gray-700 font-light">
+                <strong class="font-semibold text-gray-900"
+                  >Specializations:</strong
+                >
+                Social Media Design, Packaging, Greeting Cards, Cover Design
+              </p>
+              <p class="text-gray-700 font-light">
+                <strong class="font-semibold text-gray-900">Skills:</strong>
+                Brand Identity, Visual Communication, Layout Design,
+                Illustration
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-32 px-6">
+      <div class="max-w-3xl mx-auto text-center">
+        <h2 class="section-title mb-6 text-gray-900">Get In Touch</h2>
+        <p class="text-lg text-gray-600 font-light mb-12">
+          I'm always open to discussing new projects, creative ideas, and
+          opportunities to be part of your vision.
+        </p>
+
+        <a
+          href="mailto:hello@creativedesigner.com"
+          class="inline-block text-3xl font-semibold accent-color hover:text-gray-800 transition-colors mb-16"
+        >
+          hello@creativedesigner.com
+        </a>
+
+        <div class="flex justify-center gap-6">
+          <a href="#" class="social-icon" title="Behance" aria-label="Behance">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M6.938 4.503H15.072V6.097H6.938V4.503zm0 3.742H15.072V9.839H6.938V8.245zm9.325 3.397c.703 0 1.337.247 1.868.616.53.369 1.024 1.104 1.024 2.208 0 1.104-.493 1.839-1.024 2.208-.531.369-1.165.616-1.868.616-.704 0-1.337-.247-1.868-.616-.53-.369-1.024-1.104-1.024-2.208 0-1.104.494-1.839 1.024-2.208.531-.369 1.164-.616 1.868-.616m-1.325 2.165c0 .493.277.983.803 1.232.526.25 1.183.25 1.325 0 .14-.25.14-1.232.14-1.232h-2.268v.001zm9.654-.41V5.855h-.955v-.902h.955V4.503h1.208v.45h1.024v.902h-1.024v2.208c0 .247 0 .616.277.863.277.247.704.277 1.024.277v.956h-.985c-1.024 0-1.479-.369-1.479-1.25zm-18.606.041c0 .493.277.983.803 1.232.526.25 1.183.25 1.326 0 .14-.25.14-1.232.14-1.232H6.986v.001z"
+              />
+            </svg>
+          </a>
+          <a
+            href="#"
+            class="social-icon"
+            title="Dribbble"
+            aria-label="Dribbble"
+          >
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <path
+                d="M8.56 2.75c3.695 6.746 6.632 9.684 9.378 12.43.58-.58 1.132-1.144 1.65-1.782"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+            </svg>
+          </a>
+          <a
+            href="#"
+            class="social-icon"
+            title="Instagram"
+            aria-label="Instagram"
+          >
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <rect
+                x="2"
+                y="2"
+                width="20"
+                height="20"
+                rx="5"
+                ry="5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <circle
+                cx="12"
+                cy="12"
+                r="4"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" />
+            </svg>
+          </a>
+          <a
+            href="#"
+            class="social-icon"
+            title="LinkedIn"
+            aria-label="LinkedIn"
+          >
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"
+              />
+              <circle cx="4" cy="4" r="2" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 px-6 border-t border-gray-200">
+      <div
+        class="max-w-7xl mx-auto text-center text-gray-600 font-light text-sm"
+      >
+        <p>&copy; 2024 Creative Designer. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="portfolio-modal" class="modal">
+      <div class="modal-content">
+        <button
+          class="modal-close"
+          onclick="closeModal()"
+          aria-label="Close modal"
+        >
+          ×
+        </button>
+        <img id="modal-image" class="modal-image" src="" alt="" />
+        <div class="modal-category" id="modal-category"></div>
+        <h3 class="modal-title" id="modal-title"></h3>
+        <p class="modal-description" id="modal-description"></p>
+        <div class="modal-tools" id="modal-tools"></div>
+      </div>
+    </div>
+
+    <script>
+      const portfolioData = {
+        "social-media-1": {
+          title: "Summer Fashion Campaign",
+          category: "Social Media",
+          description:
+            "A cohesive Instagram campaign designed to promote summer fashion collections with vibrant visuals and engaging layouts across multiple story formats.",
+          tools: "Figma, Photoshop",
+        },
+        "greeting-cards-1": {
+          title: "Birthday Celebration Card",
+          category: "Greeting Cards",
+          description:
+            "Cheerful and personable birthday card design with hand-crafted typography and colorful illustrations to bring joy to special celebrations.",
+          tools: "Illustrator, Photoshop",
+        },
+        "packaging-1": {
+          title: "Organic Coffee Packaging",
+          category: "Packaging Design",
+          description:
+            "Elegant packaging design for premium organic coffee featuring minimalist aesthetics and sustainable material considerations.",
+          tools: "Figma, InDesign",
+        },
+        "cover-1": {
+          title: "Modern Living Magazine",
+          category: "Cover Design",
+          description:
+            "Contemporary magazine cover featuring bold typography and carefully curated imagery to capture reader attention on newsstands.",
+          tools: "InDesign, Photoshop",
+        },
+        "social-media-2": {
+          title: "Viral TikTok Series",
+          category: "Social Media",
+          description:
+            "Fast-paced, trend-forward TikTok content series designed for maximum engagement with dynamic transitions and modern aesthetics.",
+          tools: "Figma",
+        },
+        "greeting-cards-2": {
+          title: "Wedding Invitation Suite",
+          category: "Greeting Cards",
+          description:
+            "Sophisticated wedding invitation set including save-the-dates, invitations, and thank-you cards with elegant typography and design consistency.",
+          tools: "Illustrator, InDesign",
+        },
+        "packaging-2": {
+          title: "Luxury Skincare Branding",
+          category: "Packaging Design",
+          description:
+            "Premium skincare product labels with sophisticated branding, clean typography, and luxurious visual treatment for high-end cosmetics.",
+          tools: "Figma, Photoshop",
+        },
+        "cover-2": {
+          title: "Contemporary Fiction Book",
+          category: "Cover Design",
+          description:
+            "Literary book cover design with evocative imagery and thoughtful typography to communicate the emotional essence of the story.",
+          tools: "InDesign, Photoshop",
+        },
+        "social-media-3": {
+          title: "Brand Story Templates",
+          category: "Social Media",
+          description:
+            "Customizable Instagram story templates designed to maintain brand consistency across different content creators and posting schedules.",
+          tools: "Figma",
+        },
+        "greeting-cards-3": {
+          title: "Holiday Season Card",
+          category: "Greeting Cards",
+          description:
+            "Festive holiday greeting card combining warm colors, festive illustrations, and heartfelt typography for seasonal celebrations.",
+          tools: "Illustrator",
+        },
+        "packaging-3": {
+          title: "Artisan Chocolate Box",
+          category: "Packaging Design",
+          description:
+            "Handcrafted chocolate packaging with intricate patterns and premium finishes to elevate the unboxing experience.",
+          tools: "Illustrator, InDesign",
+        },
+        "cover-3": {
+          title: "Annual Business Report",
+          category: "Cover Design",
+          description:
+            "Professional corporate report cover with data visualization elements and modern design language reflecting business growth and innovation.",
+          tools: "InDesign, Figma",
+        },
+      };
+
+      const filterBtns = document.querySelectorAll(".filter-btn");
+      const portfolioCards = document.querySelectorAll(".portfolio-card");
+
+      filterBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          filterBtns.forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          const filter = btn.getAttribute("data-filter");
+
+          portfolioCards.forEach((card) => {
+            if (
+              filter === "all" ||
+              card.getAttribute("data-category") === filter
+            ) {
+              card.classList.remove("hidden");
+              setTimeout(() => {
+                card.style.animation = "none";
+                setTimeout(() => {
+                  card.style.animation = "";
+                }, 10);
+              }, 0);
+            } else {
+              card.classList.add("hidden");
+            }
+          });
+        });
+      });
+
+      portfolioCards.forEach((card, index) => {
+        card.addEventListener("click", () => {
+          const categoryMap = {
+            "social-media": "social-media",
+            "greeting-cards": "greeting-cards",
+            packaging: "packaging",
+            cover: "cover",
+          };
+
+          const category = card.getAttribute("data-category");
+          const categoryPrefix = categoryMap[category];
+          const cardIndex =
+            Array.from(portfolioCards)
+              .filter((c) => c.getAttribute("data-category") === category)
+              .indexOf(card) + 1;
+          const dataKey = `${categoryPrefix}-${cardIndex}`;
+
+          const data = portfolioData[dataKey];
+
+          if (data) {
+            document.getElementById("modal-image").src =
+              card.querySelector("img").src;
+            document.getElementById("modal-category").textContent =
+              data.category;
+            document.getElementById("modal-title").textContent = data.title;
+            document.getElementById("modal-description").textContent =
+              data.description;
+            document.getElementById(
+              "modal-tools"
+            ).innerHTML = `<strong>Tools Used:</strong> ${data.tools}`;
+
+            document.getElementById("portfolio-modal").classList.add("active");
+            document.body.style.overflow = "hidden";
+          }
+        });
+      });
+
+      function closeModal() {
+        document.getElementById("portfolio-modal").classList.remove("active");
+        document.body.style.overflow = "auto";
+      }
+
+      document
+        .getElementById("portfolio-modal")
+        .addEventListener("click", (e) => {
+          if (e.target.id === "portfolio-modal") {
+            closeModal();
+          }
+        });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          closeModal();
+        }
+      });
+
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", (e) => {
+          const href = anchor.getAttribute("href");
+          if (href !== "#") {
+            e.preventDefault();
+            const target = document.querySelector(href);
+            if (target) {
+              target.scrollIntoView({ behavior: "smooth" });
+            }
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
