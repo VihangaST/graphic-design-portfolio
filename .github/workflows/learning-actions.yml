@@ -1,0 +1,14 @@
+name: Learning GitHub Actions
+
+on: push
+
+jobs:
+  first-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Say hello
+        run: echo "GitHub Actions is running 🚀"
+
+      - name: List files in repo
+        run: ls -la
