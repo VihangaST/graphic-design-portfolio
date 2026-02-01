@@ -320,6 +320,7 @@
           <img src="logo/FIRST.jpg" alt="Logo" style="height:40px; width:auto; object-fit:contain;" />
           <span class="text-xl font-bold tracking-wide text-gray-900" style="font-family: 'Playfair Display', serif;">HelloV</span>
         </div>
+               
         <!-- Hamburger Button (Mobile) -->
         <button id="mobile-menu-btn" class="md:hidden flex items-center px-3 py-2 border rounded text-gray-900 border-gray-400 focus:outline-none" aria-label="Open navigation menu">
           <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -859,7 +860,10 @@ I believe in the power of art to brighten days and spark happiness in every hear
             </div>
           </div>
           <!-- AUTO-GENERATED LABEL & PACKAGING END -->
-
+ <div class="flex justify-center mt-10">
+                <div id="show-more-container" class="fixed inset-0 flex items-center justify-center z-50" style="display:none;">
+                  <button id="show-more-btn" class="cta-button">Show More</button>
+                </div>
         
       </div>
     </section>
@@ -1113,34 +1117,62 @@ I believe in the power of art to brighten days and spark happiness in every hear
         },
       };
 
+
       const filterBtns = document.querySelectorAll(".filter-btn");
       const portfolioCards = document.querySelectorAll(".portfolio-card");
+      const showMoreBtn = document.getElementById("show-more-btn");
+      const showMoreContainer = document.getElementById("show-more-container");
+      const cardsPerPage = 9;
+      let currentFilter = "all";
+      let currentPage = 1;
+
+      function updateVisibleCards() {
+        let shown = 0;
+        let totalMatching = 0;
+        portfolioCards.forEach((card) => {
+          const matches = currentFilter === "all" || card.getAttribute("data-category") === currentFilter;
+          if (matches) {
+            totalMatching++;
+          }
+        });
+        let visible = 0;
+        portfolioCards.forEach((card) => {
+          const matches = currentFilter === "all" || card.getAttribute("data-category") === currentFilter;
+          if (matches) {
+            if (visible < currentPage * cardsPerPage) {
+              card.classList.remove("hidden");
+            } else {
+              card.classList.add("hidden");
+            }
+            visible++;
+          } else {
+            card.classList.add("hidden");
+          }
+        });
+        if (totalMatching > currentPage * cardsPerPage) {
+          showMoreContainer.style.display = "flex";
+        } else {
+          showMoreContainer.style.display = "none";
+        }
+      }
 
       filterBtns.forEach((btn) => {
         btn.addEventListener("click", () => {
           filterBtns.forEach((b) => b.classList.remove("active"));
           btn.classList.add("active");
-
-          const filter = btn.getAttribute("data-filter");
-
-          document.querySelectorAll('.portfolio-card').forEach((card) => {
-            if (
-              filter === "all" ||
-              card.getAttribute("data-category") === filter
-            ) {
-              card.classList.remove("hidden");
-              setTimeout(() => {
-                card.style.animation = "none";
-                setTimeout(() => {
-                  card.style.animation = "";
-                }, 10);
-              }, 0);
-            } else {
-              card.classList.add("hidden");
-            }
-          });
+          currentFilter = btn.getAttribute("data-filter");
+          currentPage = 1;
+          updateVisibleCards();
         });
       });
+
+      showMoreBtn.addEventListener("click", () => {
+        currentPage++;
+        updateVisibleCards();
+      });
+
+      // Initial display
+      updateVisibleCards();
 
       portfolioCards.forEach((card, index) => {
         card.addEventListener("click", () => {
