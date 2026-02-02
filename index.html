@@ -196,7 +196,7 @@
         font-family: "Playfair Display", serif;
         font-size: 28px;
         font-weight: 600;
-        color: #f2e9e4;
+        color: #000000;
         margin-bottom: 12px;
       }
 
@@ -204,7 +204,7 @@
         display: inline-block;
         font-size: 12px;
         font-weight: 600;
-        color: #c9ada7;
+        color: #302e2e;
         text-transform: uppercase;
         letter-spacing: 0.8px;
         margin-bottom: 16px;
@@ -1200,15 +1200,15 @@ I believe in the power of art to brighten days and spark happiness in every hear
             data = {
               title: titleElem ? titleElem.textContent : "",
               category: categoryElem ? categoryElem.textContent : category,
-              description: "No description available.",
-              tools: "Not specified"
+              // description: "No description available.",
+              // tools: "Not specified"
             };
           }
           document.getElementById("modal-image").src = card.querySelector("img").src;
           document.getElementById("modal-category").textContent = data.category;
           document.getElementById("modal-title").textContent = data.title;
           document.getElementById("modal-description").textContent = data.description;
-          document.getElementById("modal-tools").innerHTML = `<strong>Tools Used:</strong> ${data.tools}`;
+          // document.getElementById("modal-tools").innerHTML = `<strong>Tools Used:</strong> ${data.tools}`;
           document.getElementById("portfolio-modal").classList.add("active");
           document.body.style.overflow = "hidden";
         });
