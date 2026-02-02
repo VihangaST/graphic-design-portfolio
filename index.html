@@ -125,7 +125,7 @@
         display: none;
         position: fixed;
         inset: 0;
-        background: rgba(34, 34, 35, 0.95);
+        background: rgba(31, 31, 31, 0.92); /* soft muted pink overlay */
         z-index: 50;
         align-items: center;
         justify-content: center;
@@ -143,9 +143,11 @@
         position: relative;
         max-width: 800px;
         width: 100%;
-        background: #22223b;
-        border-radius: 12px;
-        padding: 30px;
+        background: linear-gradient(135deg, #f2e9e4 0%, #c9ada7 100%); /* beige to muted pink */
+        border-radius: 16px;
+        padding: 32px;
+        box-shadow: 0 8px 32px rgba(34,34,35,0.18);
+        border: 2px solid #22223b;
         animation: modalSlideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
       }
 
